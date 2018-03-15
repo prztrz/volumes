@@ -1,0 +1,36 @@
+body {
+    background-color: rgba(211, 211, 211, 0.32);
+    font-family: 'Slabo 27px', serif;
+}
+
+header .container {
+    margin: 0 auto; 
+    max-width: 700px; 
+    height: 100px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center; 
+}
+
+.heading {
+    font-size: 60px;
+}
+
+nav .container {
+    margin: 0 auto; 
+    max-width: 700px; 
+    display: flex;
+    justify-content: center;
+}
+
+nav .container input {
+    line-height: 23px; 
+    width: 220px; 
+}
+
+.main-section-results .container {
+    margin: 0 auto; 
+    max-width: 700px; 
+    margin-top: 80px;
+}
