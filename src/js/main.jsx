@@ -35,7 +35,9 @@ class Volume extends React.Component{
                     let myBookTitle= [];
                     let volumeInfo = []
                     for(let i=0; i < itemsCount - 1; i++){
-                        myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail)
+                        if(data.items[i].volumeInfo.imageLinks.thumbnail != 'undefined'){
+                            myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail)
+                        }
                         myBookAuthor.push(data.items[i].volumeInfo.authors)
                         myBookTitle.push(data.items[i].volumeInfo.title)
                     }
