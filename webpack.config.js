@@ -13,6 +13,7 @@ module.exports = {
         path: __dirname,
         filename: './src/js/app.js'
     },
+    watch: true,
 
     plugins: [
         new ExtractTextPlugin('./css/app.css')

@@ -9624,30 +9624,80 @@ var Volume = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Volume.__proto__ || Object.getPrototypeOf(Volume)).call(this, props));
 
         _this.handleSearch = function (e) {
-            _this.setState({
-                volumeSearched: e.target.value
-            });
+            e.preventDefault();
+            // this.setState({
+            //     volumeSearched: e.target.value,
+            // })
         };
 
         _this.state = {
-            volumeSearched: 1
+            volumeSearched: 1,
+            responseLength: 0,
+            bookCover: [],
+            bookAuthor: [],
+            bookTitle: []
         };
-        console.log(_this.state.volumeSearched);
         return _this;
     }
 
     _createClass(Volume, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-            fetch('https://www.googleapis.com/books/v1/volumes?q=' + this.state.volumeSearched).then(function (resp) {
-                return resp.json();
-            }).then(function (data) {
-                console.log(data);
-            });
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate(prevProps, prevState) {
+            var _this2 = this;
+
+            var volumeSearched = this.state.volumeSearched;
+
+            console.log(volumeSearched);
+            if (volumeSearched !== prevState.volumeSearched) {
+                fetch('https://www.googleapis.com/books/v1/volumes?q=' + volumeSearched).then(function (resp) {
+                    return resp.json();
+                }).then(function (data) {
+                    var myBookCover = [];
+                    var myBookAuthor = [];
+                    var myBookTitle = [];
+                    var myResponseLength = data.items.length;
+                    for (var i = 1; i < myResponseLength; i++) {
+                        myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
+                        myBookAuthor.push(data.items[i].volumeInfo.authors);
+                        myBookTitle.push(data.items[i].volumeInfo.title);
+                    }
+                    _this2.setState({
+                        bookCover: myBookCover,
+                        bookAuthor: myBookAuthor,
+                        bookTitle: myBookTitle,
+                        responseLength: myResponseLength
+                    });
+                    console.log(data.items);
+                    console.log('dlugosc tablicy' + data.items.length);
+                    //    console.log('pozycja 0' + data.items[0].volumeInfo.authors)
+                    //    console.log('pozycja 1' + data.items[1].volumeInfo.authors)
+                    //    console.log('pozycja 2' + data.items[2].volumeInfo.authors)
+                });
+            }
         }
     }, {
         key: 'render',
         value: function render() {
+            var volumeInfo = [];
+            for (var i = 0; i < this.state.responseLength - 1; i++) {
+                volumeInfo.push(_react2.default.createElement(
+                    'div',
+                    { className: 'book-content' },
+                    _react2.default.createElement('img', { src: this.state.bookCover[i] }),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'book-title' },
+                        this.state.bookTitle[i]
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'snippet' },
+                        this.state.bookAuthor[i]
+                    )
+                ));
+            }
+            console.log('volume info' + volumeInfo);
+
             return _react2.default.createElement(
                 'div',
                 { className: 'parent' },
@@ -9670,13 +9720,31 @@ var Volume = function (_React$Component) {
                     _react2.default.createElement(
                         'div',
                         { className: 'container' },
-                        _react2.default.createElement('input', { onChange: this.handleSearch, value: this.state.volumeSearched })
+                        _react2.default.createElement(
+                            'form',
+                            { onSubmit: this.handleSearch },
+                            _react2.default.createElement(
+                                'label',
+                                { htmlFor: 'username' },
+                                'Enter Book Name'
+                            ),
+                            _react2.default.createElement('input', { id: 'username', name: 'username', type: 'text' }),
+                            _react2.default.createElement(
+                                'button',
+                                null,
+                                'Send data!'
+                            )
+                        )
                     )
                 ),
                 _react2.default.createElement(
                     'div',
                     { className: 'main-section-results' },
-                    _react2.default.createElement('div', { className: 'container' })
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'container' },
+                        volumeInfo
+                    )
                 )
             );
         }
