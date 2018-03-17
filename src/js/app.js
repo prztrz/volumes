@@ -9623,36 +9623,38 @@ var Volume = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Volume.__proto__ || Object.getPrototypeOf(Volume)).call(this, props));
 
-        _this.handleSearch = function (e) {
+        _this.handleSearchChange = function (e) {
+            _this.setState({
+                bookSearched: e.target.value
+            });
+        };
+
+        _this.handleSubmission = function (e) {
             e.preventDefault();
-            fetch('https://www.googleapis.com/books/v1/volumes?q=' + e.target.value).then(function (resp) {
+            fetch('https://www.googleapis.com/books/v1/volumes?q=intitle:' + _this.state.bookSearched + '&printType=books&orderBy=newest&maxResults=40').then(function (resp) {
                 return resp.json();
             }).then(function (data) {
+                var itemsCount = data.items.length;
                 var myBookCover = [];
                 var myBookAuthor = [];
                 var myBookTitle = [];
-                var myResponseLength = data.items.length;
-                for (var i = 1; i < myResponseLength; i++) {
+                var volumeInfo = [];
+                for (var i = 0; i < itemsCount - 1; i++) {
                     myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
                     myBookAuthor.push(data.items[i].volumeInfo.authors);
                     myBookTitle.push(data.items[i].volumeInfo.title);
                 }
                 _this.setState({
+                    responseLength: itemsCount,
                     bookCover: myBookCover,
                     bookAuthor: myBookAuthor,
-                    bookTitle: myBookTitle,
-                    responseLength: myResponseLength
+                    bookTitle: myBookTitle
                 });
-                console.log(data.items);
-                console.log('dlugosc tablicy' + data.items.length);
-                //    console.log('pozycja 0' + data.items[0].volumeInfo.authors)
-                //    console.log('pozycja 1' + data.items[1].volumeInfo.authors)
-                //    console.log('pozycja 2' + data.items[2].volumeInfo.authors)
             });
         };
 
         _this.state = {
-            volumeSearched: 1,
+            bookSearched: "",
             responseLength: 0,
             bookCover: [],
             bookAuthor: [],
@@ -9660,6 +9662,11 @@ var Volume = function (_React$Component) {
         };
         return _this;
     }
+    //get input on the searched book
+
+
+    //submit button trigers fetching the data from the API
+
 
     _createClass(Volume, [{
         key: 'render',
@@ -9669,20 +9676,23 @@ var Volume = function (_React$Component) {
                 volumeInfo.push(_react2.default.createElement(
                     'div',
                     { className: 'book-content' },
-                    _react2.default.createElement('img', { src: this.state.bookCover[i] }),
                     _react2.default.createElement(
                         'div',
-                        { className: 'book-title' },
+                        { className: 'bookCover' },
+                        _react2.default.createElement('img', { src: this.state.bookCover[i] })
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'bookTitle' },
                         this.state.bookTitle[i]
                     ),
                     _react2.default.createElement(
                         'div',
-                        { className: 'snippet' },
+                        { className: 'bookAuthor' },
                         this.state.bookAuthor[i]
                     )
                 ));
             }
-            console.log('volume info' + volumeInfo);
 
             return _react2.default.createElement(
                 'div',
@@ -9714,10 +9724,10 @@ var Volume = function (_React$Component) {
                                 { htmlFor: 'username' },
                                 'Enter Book Name'
                             ),
-                            _react2.default.createElement('input', { id: 'username', name: 'username', type: 'text' }),
+                            _react2.default.createElement('input', { type: 'text', placeholder: 'Book Name', onChange: this.handleSearchChange }),
                             _react2.default.createElement(
                                 'button',
-                                null,
+                                { onClick: this.handleSubmission },
                                 'Send data!'
                             )
                         )

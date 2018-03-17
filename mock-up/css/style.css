@@ -1,11 +1,12 @@
 body {
     background-color: rgba(211, 211, 211, 0.32);
     font-family: 'Slabo 27px', serif;
+    box-sizing: border-box;
 }
 
 header .container {
     margin: 0 auto; 
-    max-width: 700px; 
+    max-width: 600px; 
     height: 100px; 
     display: flex;
     flex-direction: column;
@@ -19,18 +20,37 @@ header .container {
 
 nav .container {
     margin: 0 auto; 
-    max-width: 700px; 
+    max-width: 900px; 
     display: flex;
     justify-content: center;
+    flex-direction: row; 
 }
 
 nav .container input {
     line-height: 23px; 
-    width: 220px; 
+    width: 300px; 
 }
 
 .main-section-results .container {
     margin: 0 auto; 
-    max-width: 700px; 
+    max-width: 900px;
     margin-top: 80px;
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+}
+
+.book-content {
+    display: flex; 
+    justify-content: center;
+    flex-direction: column;
+    align-items: center; 
+    width: 300px;
+    height: 400px; 
+}
+
+.book-content img {
+    height: 240px;
+    width: 160px; 
 }
