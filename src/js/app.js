@@ -9640,11 +9640,12 @@ var Volume = function (_React$Component) {
                 var myBookTitle = [];
                 var volumeInfo = [];
                 for (var i = 0; i < itemsCount - 1; i++) {
-                    if (data.items[i].volumeInfo.imageLinks.thumbnail != 'undefined') {
+                    //tutaj sprawdzam 
+                    if (data.items[i] != null) {
                         myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
+                        myBookAuthor.push(data.items[i].volumeInfo.authors);
+                        myBookTitle.push(data.items[i].volumeInfo.title);
                     }
-                    myBookAuthor.push(data.items[i].volumeInfo.authors);
-                    myBookTitle.push(data.items[i].volumeInfo.title);
                 }
                 _this.setState({
                     responseLength: itemsCount,
