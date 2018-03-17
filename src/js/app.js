@@ -9607,6 +9607,10 @@ var _reactDom = __webpack_require__(99);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
+var _idx = __webpack_require__(185);
+
+var _idx2 = _interopRequireDefault(_idx);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9616,140 +9620,161 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Volume = function (_React$Component) {
-    _inherits(Volume, _React$Component);
+  _inherits(Volume, _React$Component);
 
-    function Volume(props) {
-        _classCallCheck(this, Volume);
+  function Volume(props) {
+    _classCallCheck(this, Volume);
 
-        var _this = _possibleConstructorReturn(this, (Volume.__proto__ || Object.getPrototypeOf(Volume)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Volume.__proto__ || Object.getPrototypeOf(Volume)).call(this, props));
 
-        _this.handleSearchChange = function (e) {
-            _this.setState({
-                bookSearched: e.target.value
-            });
-        };
+    _this.handleSearchChange = function (e) {
+      _this.setState({
+        bookSearched: e.target.value
+      });
+    };
 
-        _this.handleSubmission = function (e) {
-            e.preventDefault();
-            fetch('https://www.googleapis.com/books/v1/volumes?q=intitle:' + _this.state.bookSearched + '&printType=books&orderBy=newest&maxResults=40').then(function (resp) {
-                return resp.json();
-            }).then(function (data) {
-                var itemsCount = data.items.length;
-                var myBookCover = [];
-                var myBookAuthor = [];
-                var myBookTitle = [];
-                var volumeInfo = [];
-                for (var i = 0; i < itemsCount - 1; i++) {
-                    //tutaj sprawdzam 
-                    if (data.items[i] != null) {
-                        myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
-                        myBookAuthor.push(data.items[i].volumeInfo.authors);
-                        myBookTitle.push(data.items[i].volumeInfo.title);
-                    }
-                }
-                _this.setState({
-                    responseLength: itemsCount,
-                    bookCover: myBookCover,
-                    bookAuthor: myBookAuthor,
-                    bookTitle: myBookTitle
-                });
-            });
-        };
+    _this.handleSubmission = function (e) {
+      e.preventDefault();
+      fetch('https://www.googleapis.com/books/v1/volumes?q=intitle:' + _this.state.bookSearched + '&printType=books&orderBy=newest&maxResults=40').then(function (resp) {
+        return resp.json();
+      }).then(function (data) {
+        var itemsCount = data.items.length;
+        var myBookCover = [];
+        var myBookAuthor = [];
+        var myBookTitle = [];
+        var volumeInfo = [];
 
-        _this.state = {
-            bookSearched: "",
-            responseLength: 0,
-            bookCover: [],
-            bookAuthor: [],
-            bookTitle: []
-        };
-        return _this;
+        var items = data.items;
+
+        items.forEach(function (item) {
+          var thumbnail = (0, _idx2.default)(item, function (_) {
+            return _.volumeInfo.imageLinks.thumbnail;
+          }) || '';
+          var authors = (0, _idx2.default)(item, function (_) {
+            return _.volumeInfo.authors;
+          }) || '';
+          var title = (0, _idx2.default)(item, function (_) {
+            return _.volumeInfo.title;
+          }) || '';
+          myBookCover.push(thumbnail);
+          myBookAuthor.push(authors);
+          myBookTitle.push(title);
+        });
+        // for (let i = 0; i < itemsCount - 1; i++) {
+        //   console.log(i, data.items[i].volumeInfo.imageLinks.thumbnail);
+        //   if (data.items[i] != null) {
+        //     myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
+        //     myBookAuthor.push(data.items[i].volumeInfo.authors);
+        //     myBookTitle.push(data.items[i].volumeInfo.title);
+        //   }
+        // }
+        _this.setState({
+          responseLength: itemsCount,
+          bookCover: myBookCover,
+          bookAuthor: myBookAuthor,
+          bookTitle: myBookTitle
+        });
+      });
+    };
+
+    _this.state = {
+      bookSearched: '',
+      responseLength: 0,
+      bookCover: [],
+      bookAuthor: [],
+      bookTitle: []
+    };
+    return _this;
+  }
+  //get input on the searched book
+
+
+  //submit button trigers fetching the data from the API
+
+
+  _createClass(Volume, [{
+    key: 'render',
+    value: function render() {
+      var volumeInfo = [];
+      for (var i = 0; i < this.state.responseLength - 1; i++) {
+        volumeInfo.push(_react2.default.createElement(
+          'div',
+          { className: 'book-content' },
+          _react2.default.createElement(
+            'div',
+            { className: 'bookCover' },
+            _react2.default.createElement('img', { src: this.state.bookCover[i] })
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'bookTitle' },
+            this.state.bookTitle[i]
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'bookAuthor' },
+            this.state.bookAuthor[i]
+          )
+        ));
+      }
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'parent' },
+        _react2.default.createElement(
+          'header',
+          { className: 'main-header' },
+          _react2.default.createElement(
+            'div',
+            { className: 'container' },
+            _react2.default.createElement(
+              'h1',
+              { className: 'heading' },
+              'Book Volumes'
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'nav',
+          { className: 'main-nav' },
+          _react2.default.createElement(
+            'div',
+            { className: 'container' },
+            _react2.default.createElement(
+              'form',
+              { onSubmit: this.handleSearch },
+              _react2.default.createElement(
+                'label',
+                { htmlFor: 'username' },
+                'Enter Book Name'
+              ),
+              _react2.default.createElement('input', {
+                type: 'text',
+                placeholder: 'Book Name',
+                onChange: this.handleSearchChange
+              }),
+              _react2.default.createElement(
+                'button',
+                { onClick: this.handleSubmission },
+                'Send data!'
+              )
+            )
+          )
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'main-section-results' },
+          _react2.default.createElement(
+            'div',
+            { className: 'container' },
+            volumeInfo
+          )
+        )
+      );
     }
-    //get input on the searched book
+  }]);
 
-
-    //submit button trigers fetching the data from the API
-
-
-    _createClass(Volume, [{
-        key: 'render',
-        value: function render() {
-            var volumeInfo = [];
-            for (var i = 0; i < this.state.responseLength - 1; i++) {
-                volumeInfo.push(_react2.default.createElement(
-                    'div',
-                    { className: 'book-content' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'bookCover' },
-                        _react2.default.createElement('img', { src: this.state.bookCover[i] })
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'bookTitle' },
-                        this.state.bookTitle[i]
-                    ),
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'bookAuthor' },
-                        this.state.bookAuthor[i]
-                    )
-                ));
-            }
-
-            return _react2.default.createElement(
-                'div',
-                { className: 'parent' },
-                _react2.default.createElement(
-                    'header',
-                    { className: 'main-header' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'container' },
-                        _react2.default.createElement(
-                            'h1',
-                            { className: 'heading' },
-                            'Book Volumes'
-                        )
-                    )
-                ),
-                _react2.default.createElement(
-                    'nav',
-                    { className: 'main-nav' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'container' },
-                        _react2.default.createElement(
-                            'form',
-                            { onSubmit: this.handleSearch },
-                            _react2.default.createElement(
-                                'label',
-                                { htmlFor: 'username' },
-                                'Enter Book Name'
-                            ),
-                            _react2.default.createElement('input', { type: 'text', placeholder: 'Book Name', onChange: this.handleSearchChange }),
-                            _react2.default.createElement(
-                                'button',
-                                { onClick: this.handleSubmission },
-                                'Send data!'
-                            )
-                        )
-                    )
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'main-section-results' },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'container' },
-                        volumeInfo
-                    )
-                )
-            );
-        }
-    }]);
-
-    return Volume;
+  return Volume;
 }(_react2.default.Component);
 
 _reactDom2.default.render(_react2.default.createElement(Volume, null), document.getElementById('app'));
@@ -22282,6 +22307,99 @@ var ReactDOMInvalidARIAHook = {
 
 module.exports = ReactDOMInvalidARIAHook;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 185 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * 
+ */
+
+ // eslint-disable-line strict
+
+/**
+ * Traverses properties on objects and arrays. If an intermediate property is
+ * either null or undefined, it is instead returned. The purpose of this method
+ * is to simplify extracting properties from a chain of maybe-typed properties.
+ *
+ * === EXAMPLE ===
+ *
+ * Consider the following type:
+ *
+ *   const props: {
+ *     user: ?{
+ *       name: string,
+ *       friends: ?Array<User>,
+ *     }
+ *   };
+ *
+ * Getting to the friends of my first friend would resemble:
+ *
+ *   props.user &&
+ *   props.user.friends &&
+ *   props.user.friends[0] &&
+ *   props.user.friends[0].friends
+ *
+ * Instead, `idx` allows us to safely write:
+ *
+ *   idx(props, _ => _.user.friends[0].friends)
+ *
+ * The second argument must be a function that returns one or more nested member
+ * expressions. Any other expression has undefined behavior.
+ *
+ * === NOTE ===
+ *
+ * The code below exists for the purpose of illustrating expected behavior and
+ * is not meant to be executed. The `idx` function is used in conjunction with a
+ * Babel transform that replaces it with better performing code:
+ *
+ *   props.user == null ? props.user :
+ *   props.user.friends == null ? props.user.friends :
+ *   props.user.friends[0] == null ? props.user.friends[0] :
+ *   props.user.friends[0].friends
+ *
+ * All this machinery exists due to the fact that an existential operator does
+ * not currently exist in JavaScript.
+ */
+
+function idx(input, accessor) {
+  try {
+    return accessor(input);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      if (nullPattern.test(error)) {
+        return null;
+      } else if (undefinedPattern.test(error)) {
+        return undefined;
+      }
+    }
+    throw error;
+  }
+}
+
+/**
+ * Some actual error messages for null:
+ *
+ * TypeError: Cannot read property 'bar' of null
+ * TypeError: Cannot convert null value to object
+ * TypeError: foo is null
+ * TypeError: null has no properties
+ * TypeError: null is not an object (evaluating 'foo.bar')
+ * TypeError: null is not an object (evaluating '(" undefined ", null).bar')
+ */
+var nullPattern = /^null | null$|^[^(]* null /;
+var undefinedPattern = /^undefined | undefined$|^[^(]* undefined /;
+
+idx.default = idx;
+module.exports = idx;
+
 
 /***/ })
 /******/ ]);
