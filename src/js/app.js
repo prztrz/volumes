@@ -9625,9 +9625,30 @@ var Volume = function (_React$Component) {
 
         _this.handleSearch = function (e) {
             e.preventDefault();
-            // this.setState({
-            //     volumeSearched: e.target.value,
-            // })
+            fetch('https://www.googleapis.com/books/v1/volumes?q=' + e.target.value).then(function (resp) {
+                return resp.json();
+            }).then(function (data) {
+                var myBookCover = [];
+                var myBookAuthor = [];
+                var myBookTitle = [];
+                var myResponseLength = data.items.length;
+                for (var i = 1; i < myResponseLength; i++) {
+                    myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
+                    myBookAuthor.push(data.items[i].volumeInfo.authors);
+                    myBookTitle.push(data.items[i].volumeInfo.title);
+                }
+                _this.setState({
+                    bookCover: myBookCover,
+                    bookAuthor: myBookAuthor,
+                    bookTitle: myBookTitle,
+                    responseLength: myResponseLength
+                });
+                console.log(data.items);
+                console.log('dlugosc tablicy' + data.items.length);
+                //    console.log('pozycja 0' + data.items[0].volumeInfo.authors)
+                //    console.log('pozycja 1' + data.items[1].volumeInfo.authors)
+                //    console.log('pozycja 2' + data.items[2].volumeInfo.authors)
+            });
         };
 
         _this.state = {
@@ -9641,41 +9662,6 @@ var Volume = function (_React$Component) {
     }
 
     _createClass(Volume, [{
-        key: 'componentDidUpdate',
-        value: function componentDidUpdate(prevProps, prevState) {
-            var _this2 = this;
-
-            var volumeSearched = this.state.volumeSearched;
-
-            console.log(volumeSearched);
-            if (volumeSearched !== prevState.volumeSearched) {
-                fetch('https://www.googleapis.com/books/v1/volumes?q=' + volumeSearched).then(function (resp) {
-                    return resp.json();
-                }).then(function (data) {
-                    var myBookCover = [];
-                    var myBookAuthor = [];
-                    var myBookTitle = [];
-                    var myResponseLength = data.items.length;
-                    for (var i = 1; i < myResponseLength; i++) {
-                        myBookCover.push(data.items[i].volumeInfo.imageLinks.thumbnail);
-                        myBookAuthor.push(data.items[i].volumeInfo.authors);
-                        myBookTitle.push(data.items[i].volumeInfo.title);
-                    }
-                    _this2.setState({
-                        bookCover: myBookCover,
-                        bookAuthor: myBookAuthor,
-                        bookTitle: myBookTitle,
-                        responseLength: myResponseLength
-                    });
-                    console.log(data.items);
-                    console.log('dlugosc tablicy' + data.items.length);
-                    //    console.log('pozycja 0' + data.items[0].volumeInfo.authors)
-                    //    console.log('pozycja 1' + data.items[1].volumeInfo.authors)
-                    //    console.log('pozycja 2' + data.items[2].volumeInfo.authors)
-                });
-            }
-        }
-    }, {
         key: 'render',
         value: function render() {
             var volumeInfo = [];

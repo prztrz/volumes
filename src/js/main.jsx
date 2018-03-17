@@ -17,15 +17,7 @@ class Volume extends React.Component{
 
     handleSearch = (e) => {
         e.preventDefault();
-        // this.setState({
-        //     volumeSearched: e.target.value,
-        // })
-    }
-    componentDidUpdate(prevProps, prevState) {
-            const {volumeSearched} = this.state;
-            console.log(volumeSearched)
-            if(volumeSearched !== prevState.volumeSearched){
-                fetch(`https://www.googleapis.com/books/v1/volumes?q=${volumeSearched}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes?q=${e.target.value}`)
                 .then(resp=>{
                     return resp.json();
                 })
@@ -52,9 +44,9 @@ class Volume extends React.Component{
                 //    console.log('pozycja 2' + data.items[2].volumeInfo.authors)
                 }
             )
-         }
-
+        
     }
+
 
     render(){ 
         let volumeInfo = []
@@ -95,9 +87,8 @@ class Volume extends React.Component{
         )
 
     }
-    
+   
 }
-
 
 ReactDOM.render(
     <Volume/>,
